@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  client:
+    image: client
+    ports:
+      - "5001:3000"
+    environment:
+      - NODE_ENV=production
+      - WDS_SOCKET_PORT=0
+    build:
+      context: ./site
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1gb
+        reservations:
+          cpus: '0.75'
+          memory: 512m
+
+  proxy:
+    image: nginx:mainline
+    volumes:
+      - ./nginx/main.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
